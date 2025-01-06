@@ -7,7 +7,7 @@ export const getVideos = async () => {
 		return []
 	}
 
-	return (await response.json() as any[]).map((data) => {
+	return (await response.json() as string[]).map((data) => {
 		return new VideoInfo(data)
 	})
 }

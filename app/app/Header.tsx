@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { VideoInfo } from "./types";
 import { getVideos } from "./client";
+import Link from "next/link";
 
 const HeaderList = ({ videos }: { videos: VideoInfo[] }) => {
 	return <div key="header-list" className="flex flex-row justify-left space-x-2 m-2 overflow-x-auto">
-		<a className="m-2 hover:underline" href='/'>home</a>
+		<Link className="m-2 hover:underline" href='/'>home</Link>
 		{videos.map((video) => {
-			return <a key={video.name} href={video.name} className="m-2 hover:underline hover:cursor-pointer">
+			return <Link key={video.name} href={video.name} className="m-2 hover:underline hover:cursor-pointer">
 				{video.name}
-			</a>
+			</Link>
 		})}
 	</div>
 }

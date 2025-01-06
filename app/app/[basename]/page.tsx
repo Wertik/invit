@@ -16,7 +16,7 @@ type TranscriptLine = {
 	timestamp: Timestamp
 }
 
-const Transcript = ({ lines, currentTime, changeTime }: { lines: TranscriptLine[]; currentTime: any; changeTime: any }) => {
+const Transcript = ({ lines, currentTime, changeTime }: { lines: TranscriptLine[]; currentTime: number; changeTime: (val: number) => void }) => {
 	const router = useRouter()
 	const pathname = usePathname();
 
@@ -31,7 +31,7 @@ const Transcript = ({ lines, currentTime, changeTime }: { lines: TranscriptLine[
 			behavior: "smooth",
 			top: span.offsetTop - transcript.clientHeight / 2
 		})
-	}, [currentTime]);
+	}, [currentTime, lines]);
 
 	return (
 		<section id="transcript" className="m-2 overflow-y-auto max-h-[calc(100vh-8vh)]">
@@ -89,7 +89,7 @@ const Home = () => {
 				} as TranscriptLine;
 			}));
 		});
-	}, []);
+	}, [params.basename]);
 
 	const [videoPlayer, setVideoPlayer] = useState<HTMLVideoElement | null>(null);
 
@@ -114,11 +114,11 @@ const Home = () => {
 			videoPlayer.currentTime = currentTime;
 
 			setVideoPlayer(videoPlayer);
-			videoPlayer.addEventListener('timeupdate', event => {
+			videoPlayer.addEventListener('timeupdate', () => {
 				setCurrentTime(videoPlayer.currentTime);
 			})
 		}
-	}, []);
+	}, [currentTime]);
 
 	return (
 		<main>
