@@ -58,19 +58,24 @@ const Home = () => {
 	return (
 		<main>
 			<Header />
-			<div className="grid grid-cols-10">
-				<div className="col-span-6">
-					<Player basename={params.basename} />
-				</div>
-				<div className="col-span-4">
-					<i className="text-gray-400">click on lines of the transcript to time travel</i>
-					<Transcript
-						scrollable
-						lines={lines}
-						currentTime={currentTime}
-						changeTime={changeTime}
-					/>
-				</div>
+			<div className="flex flex-col">
+				<section className="grid grid-cols-10">
+					<div className="col-span-6">
+						<Player basename={params.basename} />
+					</div>
+					<div className="col-span-4">
+						<i className="text-gray-400">click on lines of the transcript to time travel</i>
+						<Transcript
+							scrollable
+							lines={lines}
+							currentTime={currentTime}
+							changeTime={changeTime}
+						/>
+					</div>
+				</section>
+				<section className="m-2 flex justify-center">
+					<span className="text-gray-400">Access to uploaded content is restricted to BUT FIT students. If you're not one of them, you're hereby asked to leave.</span>
+				</section>
 			</div>
 		</main>
 	);

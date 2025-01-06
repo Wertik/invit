@@ -28,7 +28,7 @@ const Transcript = ({ scrollable, lines, currentTime, changeTime, onClick }: { s
 	}, [currentTime, lines]);
 
 	return (
-		<section id="transcript" className={classNames("m-2", { "overflow-y-auto max-h-[calc(100vh-8vh)]": scrollable })}>
+		<section id="transcript" className={classNames("m-2", { "overflow-y-auto max-h-[calc(100vh-15vh)]": scrollable })}>
 			{lines.map((line: TranscriptLine) =>
 				<span id={line.id.toString()} key={line.id} className={
 					classNames("hover:cursor-pointer hover:text-lime-100",
