@@ -44,8 +44,6 @@ export default function Home() {
 			videos.map((video) => {
 				return <Transcript
 					key={video.name}
-					changeTime={() => { }}
-					currentTime={0}
 					lines={video.lines}
 					onClick={(line) => {
 						router.push('/' + video.name + '?t=' + line.timestamp.start)
