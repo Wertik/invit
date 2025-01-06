@@ -8,6 +8,7 @@ import Link from "next/link";
 const HeaderList = ({ videos }: { videos: VideoInfo[] }) => {
 	return <div key="header-list" className="flex flex-row justify-left space-x-2 m-2 overflow-x-auto">
 		<Link className="m-2 hover:underline" href='/'>home</Link>
+		<Link className="m-2 hover:underline" href='/all'>all</Link>
 		{videos.map((video) => {
 			return <Link key={video.name} href={video.name} className="m-2 hover:underline hover:cursor-pointer">
 				{video.name}
