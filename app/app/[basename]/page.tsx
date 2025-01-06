@@ -63,6 +63,7 @@ const Home = () => {
 					<Player basename={params.basename} />
 				</div>
 				<div className="col-span-4">
+					<i className="text-gray-400">click on lines of the transcript to time travel</i>
 					<Transcript
 						scrollable
 						lines={lines}
