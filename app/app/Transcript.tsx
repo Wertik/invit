@@ -10,7 +10,7 @@ const Transcript = ({ scrollable, lines, currentTime, changeTime, onClick }: { s
 	const pathname = usePathname();
 
 	useEffect(() => {
-		if (!currentTime) return;
+		if (currentTime == undefined) return;
 
 		const line = lines.find((line) => currentTime >= line.timestamp.start && currentTime < line.timestamp.end)
 		if (!line) return;
@@ -33,7 +33,7 @@ const Transcript = ({ scrollable, lines, currentTime, changeTime, onClick }: { s
 				<span id={line.id.toString()} key={line.id} className={
 					classNames("hover:cursor-pointer hover:text-lime-100",
 						{
-							"text-gray-400": currentTime && currentTime >= line.timestamp.start && currentTime < line.timestamp.end
+							"text-gray-400": currentTime !== undefined && currentTime >= line.timestamp.start && currentTime < line.timestamp.end
 						})} onClick={() => {
 							if (!onClick) {
 								if (changeTime) {
