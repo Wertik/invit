@@ -1,0 +1,7 @@
+ffmpeg==1.4
+ffmpeg_python==0.2.0
+orjson==3.10.13
+regex==2024.4.28
+torch==2.5.1
+transformers==4.47.1
+argparse==1.4.0

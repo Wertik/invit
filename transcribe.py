@@ -1,9 +1,7 @@
-# take a .mp3 and create a .srt transcription
-
 # Use a pipeline as a high-level helper
+# Code for transformers/whisper taken from huggingface.
 from transformers import pipeline
 import argparse
-# use https://github.com/ijl/orjson
 import orjson
 import ffmpeg
 from typing import NamedTuple
