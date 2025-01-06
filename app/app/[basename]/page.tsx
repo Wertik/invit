@@ -74,7 +74,7 @@ const Home = () => {
 					</div>
 				</section>
 				<section className="m-2 flex justify-center">
-					<span className="text-gray-400">Access to uploaded content is restricted to BUT FIT students. If you're not one of them, you're hereby asked to leave.</span>
+					<span className="text-gray-400">Access to uploaded content is restricted to BUT FIT students. If you&apos;re not one of them, you&apos;re hereby asked to leave.</span>
 				</section>
 			</div>
 		</main>
