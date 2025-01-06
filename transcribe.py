@@ -163,6 +163,22 @@ def mp4_to_mp3(input, output):
 	out = out.overwrite_output()
 	out.run()
 
+def transcribe_whisper(file: str):
+	pipe = pipeline(
+		"automatic-speech-recognition",
+		model="openai/whisper-large-v3-turbo"
+	)
+
+	result = pipe(
+		file,
+		generate_kwargs={"language": "czech"},
+		chunk_length_s=30,
+		batch_size=2,
+		return_timestamps=True
+	)
+
+	return result['chunks']
+
 def main():
 	parser = argparse.ArgumentParser(
 		prog='transcribe',
@@ -200,22 +216,11 @@ def main():
 		else:
 			print(f'{mp3_path} file already exists, using it')
 
-		pipe = pipeline(
-			"automatic-speech-recognition",
-			model="openai/whisper-large-v3-turbo"
-		)
-
-		result = pipe(
-			mp3_path,
-			generate_kwargs={"language": "czech"},
-			chunk_length_s=30,
-			batch_size=2,
-			return_timestamps=True
-		)
+		chunks = transcribe_whisper(mp3_path)
 
 		duration = float(ffmpeg.probe(mp3_path)['format']['duration'])
 
-		p_chunks = parse_chunks(result['chunks'], duration)
+		p_chunks = parse_chunks(chunks, duration)
 
 		count = filter_hallucinations(p_chunks)
 		print(f'Removed {count} hallucination(s)...')
