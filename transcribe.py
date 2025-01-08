@@ -155,8 +155,8 @@ def dump_to_json(chunks: list[ProcessedChunk], filename):
 		fp.write(orjson.dumps(chunks, default=default).decode('utf-8'))
 	print(f'{filename} done')
 
-# produce an mp3 at the same location using ffmpeg
-def mp4_to_mp3(input, output):
+# convert using ffmpeg
+def ffmpeg_conv(input, output):
 	mp4 = ffmpeg.input(input)
 	out = ffmpeg.output(mp4, output)
 	out = out.global_args('-hwaccel', 'cuda')
@@ -189,6 +189,7 @@ def main():
 	parser.add_argument('-m', '--move-input', help='move src file to out folder along with output', action='store_true', default=False)
 	parser.add_argument('--json', help='output a json file', default=False, action='store_true')
 	parser.add_argument('--srt', help='output a srt file', default=False, action='store_true')
+	parser.add_argument('--webm', help='output the source (if video) in webm format', default=False, action='store_true')
 	parser.add_argument('--force', '-f', help='overwrite existing output files', default=False, action='store_true')
 
 	args = parser.parse_args()
@@ -210,25 +211,41 @@ def main():
 		basename = os.path.splitext(os.path.basename(input_file))[0]
 		path = os.path.join(out_dir, basename)
 
-		all_exist = True
-		for format in ['json', 'srt']:
+		missing = []
+		for format in ['json', 'srt', 'webm']:
 			if vars(args)[format] == True:
 				format_path = f'{path}.{format}'
 				if os.path.isfile(format_path) == False:
-					all_exist = False
+					missing.append(format)
 					break
 
-		if all_exist == True and args.force == False:
+		if len(missing) == 0 and args.force == False:
 			print(f'Nothing to do for ${input_file}, all specified outputs already exist. Add --force to overwrite them.')
 			continue
 
 		if input_file.endswith('.mp3'):
 			mp3_path = input_file
+			is_video = False
 		else:
 			mp3_path = input_file.replace('.mp4', '.mp3')
+			is_video = True
+
+		# only output things that are missing
+
+		print(f'Missing output: {missing}')
+
+		# do we need to run the transcript? only if the thing missing is webm
+		if len(missing) == 1 and missing[0] == 'webm':
+			if is_video == False:
+				print('Cannot convert mp3 files into webm.')
+			else:
+				# ffmpeg
+				print('Converting to webm')
+				ffmpeg_conv(input_file, f'{path}.webm')
+			exit(0)
 
 		if os.path.isfile(mp3_path) == False:
-			mp4_to_mp3(input_file, mp3_path)
+			ffmpeg_conv(input_file, mp3_path)
 		else:
 			print(f'{mp3_path} file already exists, using it')
 
@@ -245,6 +262,15 @@ def main():
 			dump_to_json(p_chunks, f'{path}.json')
 		if args.srt == True:
 			dump_to_srt(p_chunks, f'{path}.srt')
+		if args.webm == True:
+			# convert to webm
+
+			if is_video == False:
+				print('Cannot convert mp3 files into webm.')
+			else:
+				# ffmpeg
+				print('Converting to webm')
+				ffmpeg_conv(input_file, f'${path}.webm')
 
 		if args.move_input == True:
 			shutil.copy(input_file, out_dir)
