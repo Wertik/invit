@@ -189,6 +189,7 @@ def main():
 	parser.add_argument('-m', '--move-input', help='move src file to out folder along with output', action='store_true', default=False)
 	parser.add_argument('--json', help='output a json file', default=False, action='store_true')
 	parser.add_argument('--srt', help='output a srt file', default=False, action='store_true')
+	parser.add_argument('--force', '-f', help='overwrite existing output files', default=False, action='store_true')
 
 	args = parser.parse_args()
 
@@ -205,6 +206,21 @@ def main():
 	for input_file in files:
 
 		print('Processing ' + input_file)
+
+		basename = os.path.splitext(os.path.basename(input_file))[0]
+		path = os.path.join(out_dir, basename)
+
+		all_exist = True
+		for format in ['json', 'srt']:
+			if vars(args)[format] == True:
+				format_path = f'{path}.{format}'
+				if os.path.isfile(format_path) == False:
+					all_exist = False
+					break
+
+		if all_exist == True and args.force == False:
+			print(f'Nothing to do for ${input_file}, all specified outputs already exist. Add --force to overwrite them.')
+			continue
 
 		if input_file.endswith('.mp3'):
 			mp3_path = input_file
@@ -225,9 +241,6 @@ def main():
 		count = filter_hallucinations(p_chunks)
 		print(f'Removed {count} hallucination(s)...')
 
-		basename = os.path.splitext(os.path.basename(input_file))[0]
-
-		path = os.path.join(out_dir, basename)
 		if args.json == True:
 			dump_to_json(p_chunks, f'{path}.json')
 		if args.srt == True:
